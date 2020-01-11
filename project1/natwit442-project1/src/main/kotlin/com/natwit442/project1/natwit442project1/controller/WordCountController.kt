@@ -2,21 +2,20 @@ package com.natwit442.project1.natwit442project1.controller
 
 
 import org.jsoup.Jsoup
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import javax.servlet.http.HttpServletResponse
 import kotlin.Error
 
-@RestController
+@Controller
 class WordCountController {
-    @RequestMapping("/")
-    fun greeting() = "greeting! from rest controller"
 
     @RequestMapping("/wc")
-    fun computeAdd(@RequestParam(value="target")  url : String ) : ResponseEntity<HttpStatus>{
+    fun computeAdd(@RequestParam(value="target")  url : String, res: HttpServletResponse, model: Model ) : String {
         println("parsing $url")
+        model.addAttribute("a", "b");
         try {
             Jsoup.connect(url).get().run {
                 val counter = mutableMapOf<String, Int>();
@@ -34,6 +33,7 @@ class WordCountController {
                         counter[lower] = value!!.plus(1);
                     }
                 }
+
                 counter.toList().sortedByDescending { (_, value) -> value }.forEach {
                     val word = it.first;
                     val count = it.second;
@@ -50,7 +50,7 @@ class WordCountController {
             println(error);
         }
 
-        return ResponseEntity.ok(HttpStatus.OK)
+        return "result"
 
     }
 }
