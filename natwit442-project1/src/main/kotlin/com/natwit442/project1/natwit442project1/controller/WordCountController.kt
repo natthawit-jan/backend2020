@@ -21,16 +21,16 @@ class WordCountController(val wordCountService: WordCountService) {
 
     @RequestMapping("/wc", produces = ["application/json"])
     @ResponseBody
-    fun processJson(@RequestParam(value="target")  url : String): Result {
-        val (sumOfWords, topTen) = wordCountService.countWord(url)
+    fun processJson(@RequestParam(value="target")  url : String, @RequestParam(value = "force", defaultValue="false") force: Boolean): Result {
+        val (sumOfWords, topTen) = wordCountService.countWord(url, force)
         return Result(sumOfWords, topTen)
     }
 
     @RequestMapping("/wc", produces = ["text/plain"])
     @ResponseBody
-    fun processPlainText(@RequestParam(value="target")  url : String): String {
+    fun processPlainText(@RequestParam(value="target")  url : String, @RequestParam(value = "force", defaultValue="false") force: Boolean): String {
         LOGGER.info("Request comes for [plain text")
-        val (sumOfWords, topTen) = wordCountService.countWord(url)
+        val (sumOfWords, topTen) = wordCountService.countWord(url, force)
         return Result(sumOfWords, topTen).toString()
     }
 
@@ -39,9 +39,9 @@ class WordCountController(val wordCountService: WordCountService) {
 
 
     @RequestMapping("/wc")
-    fun computeAdd(@RequestParam(value="target")  url : String, model: Model) : String {
+    fun computeAdd(@RequestParam(value="target")  url : String, @RequestParam(value = "force", defaultValue="false") force: Boolean, model: Model) : String {
         LOGGER.info("Parsing ${url} for html version")
-        val result = wordCountService.countWord(url)
+        val result = wordCountService.countWord(url, force)
         model.addAttribute("result", result)
 
         return "result"

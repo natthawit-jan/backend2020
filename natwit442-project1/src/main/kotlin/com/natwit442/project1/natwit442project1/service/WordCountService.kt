@@ -13,8 +13,8 @@ class WordCountService {
 
 
 
-    @Cacheable("words")
-    fun countWord(url : String) : Pair<Int, List<String>> {
+    @Cacheable("words", condition = "#force==false")
+    fun countWord(url : String, force: Boolean) : Pair<Int, List<String>> {
         try {
             Jsoup.connect(url).get().run {
                 val counter = mutableMapOf<String, Int>();
@@ -36,12 +36,14 @@ class WordCountService {
 
                 val sumOfWords = counter.values.sum()
                 LOGGER.info("Sum = ${sumOfWords}")
-                val orderValue = counter.toList().sortedByDescending { (_, value) -> value }.toList().subList(0,11).map { value -> value.first }
+                val orderValue = counter
+                        .toList()
+                        .sortedByDescending { (_, value) -> value }
+                        .subList(0,10).map { value -> value.first }
                 LOGGER.info("Topten = ${orderValue}")
                 return Pair(sumOfWords, orderValue)
 
-}
-
+            }
 
 
         } catch (error: Error) {
