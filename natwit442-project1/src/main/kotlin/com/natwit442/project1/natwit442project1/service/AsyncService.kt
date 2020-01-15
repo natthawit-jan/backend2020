@@ -39,9 +39,16 @@ class AsyncService {
                 val orderValue = counter
                         .toList()
                         .sortedByDescending { (_, value) -> value }
-                        .subList(0, 10).map { value -> value.first }
-                LOGGER.info("Topten = ${orderValue}")
-                return CompletableFuture.completedFuture(Pair(sumOfWords, orderValue))
+
+                var topTen: List<String>;
+                topTen = if (orderValue.size < 10) {
+                    orderValue.subList(0, orderValue.size).map { value ->  value.first}
+
+                } else {
+                    orderValue.subList(0, 10).map { value ->  value.first}
+                }
+                LOGGER.info("Done computing the value -> return ${topTen}")
+                return CompletableFuture.completedFuture(Pair(sumOfWords, topTen))
             }
 
         } catch (error: Error) {

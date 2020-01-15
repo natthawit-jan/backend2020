@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Controller
 class WordCountController(val wordCountService: WordCountService) {
 
+    // TODO Failure
+    // Etag
+    // deployment
+
     private val LOGGER = LoggerFactory.getLogger(WordCountController::class.java)
     data class Result(val sumOfWords: Int, val topTenWords: List<String>)
 
@@ -34,6 +38,7 @@ class WordCountController(val wordCountService: WordCountService) {
 
     @RequestMapping("/wc")
     fun computeAdd(@RequestParam(value="target")  url : String, @RequestParam(value = "force", defaultValue="false") force: Boolean, model: Model) : String {
+
         LOGGER.info("Parsing ${url} for html version")
         val result = wordCountService.countWord(url, force).join()
         model.addAttribute("result", result)

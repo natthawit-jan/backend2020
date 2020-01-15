@@ -6,14 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.filter.ShallowEtagHeaderFilter
 import java.util.concurrent.Executor
+import javax.servlet.Filter
 
 
 @SpringBootApplication
@@ -35,6 +33,10 @@ class Natwit442Project1Application {
 		executor.initialize()
 		executor.setThreadNamePrefix("project- ")
 		return executor
+	}
+	@Bean
+	fun filter(): Filter? {
+		return ShallowEtagHeaderFilter()
 	}
 
 	private val LOGGER = LoggerFactory.getLogger(Natwit442Project1Application::class.java)
