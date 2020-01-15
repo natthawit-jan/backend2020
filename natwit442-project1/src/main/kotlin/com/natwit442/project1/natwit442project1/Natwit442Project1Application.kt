@@ -6,17 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
-import org.springframework.scheduling.annotation.EnableAsync
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.filter.ShallowEtagHeaderFilter
-import java.util.concurrent.Executor
-import javax.servlet.Filter
+import java.util.concurrent.ConcurrentHashMap
 
 
 @SpringBootApplication
 @EnableCaching
-@EnableAsync
 class Natwit442Project1Application {
 
 	@Bean
@@ -24,24 +19,16 @@ class Natwit442Project1Application {
 		return RestTemplate()
 	}
 
+
 	@Bean
-	fun executor(): Executor? {
-		val executor = ThreadPoolTaskExecutor()
-		executor.corePoolSize = 5
-		executor.maxPoolSize = 5
-		executor.setQueueCapacity(500)
-		executor.initialize()
-		executor.setThreadNamePrefix("project- ")
-		return executor
+	fun getConcurrentHashMap(): ConcurrentHashMap<String, String> {
+		return ConcurrentHashMap()
 	}
-	@Bean
-	fun filter(): Filter? {
-		return ShallowEtagHeaderFilter()
-	}
+
 
 	private val LOGGER = LoggerFactory.getLogger(Natwit442Project1Application::class.java)
 	@Bean
-	fun runner(restTemplate: RestTemplate) : CommandLineRunner = object : CommandLineRunner {
+	fun runner(restTemplate: RestTemplate): CommandLineRunner = object : CommandLineRunner {
 		override fun run(vararg args: String?) {
 //			val headers = HttpHeaders()
 //			headers.setAccept(listOf(MediaType.APPLICATION_JSON))
