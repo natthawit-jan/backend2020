@@ -1,11 +1,12 @@
 package com.natwit442.project1.natwit442project1.service
 
+import com.natwit442.project1.natwit442project1.error.JsoupNetworkError
 import org.jsoup.Connection
 import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
-import java.io.IOException
+import java.net.UnknownHostException
 
 @Service
 class CacheService {
@@ -16,8 +17,8 @@ class CacheService {
         LOGGER.info("Result is not in the cache lemme compute")
         return try {
             service(res.execute().parse())
-        } catch (err: IOException) {
-            Pair(0, listOf())
+        } catch (err: UnknownHostException) {
+            throw JsoupNetworkError("Can't connect")
 
         }
 

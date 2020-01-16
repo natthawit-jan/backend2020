@@ -2,7 +2,7 @@ package com.natwit442.project1.natwit442project1
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.Ticker
-import org.slf4j.LoggerFactory
+import com.natwit442.project1.natwit442project1.view.JsonViewResolver
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -11,7 +11,10 @@ import org.springframework.cache.annotation.EnableCaching
 import org.springframework.cache.caffeine.CaffeineCache
 import org.springframework.cache.support.SimpleCacheManager
 import org.springframework.context.annotation.Bean
+import org.springframework.web.accept.ContentNegotiationManager
 import org.springframework.web.client.RestTemplate
+import org.springframework.web.servlet.ViewResolver
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
@@ -21,10 +24,8 @@ import java.util.concurrent.TimeUnit
 @EnableCaching
 class Natwit442Project1Application {
 
-	private val LOGGER = LoggerFactory.getLogger(Natwit442Project1Application::class.java)
-
 	@Bean
-	fun restTemplate(): RestTemplate? {
+	fun restTemplate(): RestTemplate {
 		return RestTemplate()
 	}
 
@@ -34,6 +35,20 @@ class Natwit442Project1Application {
 		val manager = SimpleCacheManager()
 		manager.setCaches(listOf(messageCache))
 		return manager
+	}
+
+	@Bean
+	fun jsonViewResolver() = JsonViewResolver()
+
+
+	@Bean
+	fun contentNegotiatingViewResolver(manager: ContentNegotiationManager): ViewResolver {
+		val resolver = ContentNegotiatingViewResolver()
+		resolver.contentNegotiationManager = manager
+		val resolvers: MutableList<ViewResolver> = ArrayList()
+		resolvers.add(jsonViewResolver())
+		resolver.viewResolvers = resolvers
+		return resolver
 	}
 
 	@Bean
