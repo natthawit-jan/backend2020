@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Controller
 class WordCountController(val wordCountService: WordCountService) {
 
-    // TODO Failure
-    // Etag
-    // deployment
-
     private val LOGGER = LoggerFactory.getLogger(WordCountController::class.java)
 
     data class Result(val sumOfWords: Int, val topTenWords: List<String>)
@@ -24,8 +20,6 @@ class WordCountController(val wordCountService: WordCountService) {
     @RequestMapping("/wc", produces = ["application/json"])
     @ResponseBody
     fun processJson(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue = "false") force: Boolean): Result {
-        // getEtag -> compare against the existing one - >
-
         val (sumOfWords, topTen) = wordCountService.process(url, force)!!
         return Result(sumOfWords, topTen)
 
@@ -49,6 +43,5 @@ class WordCountController(val wordCountService: WordCountService) {
         model.addAttribute("result", result)
 
         return "result"
-
     }
 }
