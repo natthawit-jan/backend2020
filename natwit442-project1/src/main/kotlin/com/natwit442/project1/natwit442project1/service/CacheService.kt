@@ -6,7 +6,7 @@ import org.jsoup.nodes.Document
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
-import java.net.UnknownHostException
+import java.io.IOException
 
 @Service
 class CacheService {
@@ -14,10 +14,11 @@ class CacheService {
 
     @Cacheable(value = ["wc-caches"], condition = "#force!=true", sync = true, key = "#p0")
     fun countWord(url: String, force: Boolean, res: Connection): Pair<Int, List<String>> {
-        LOGGER.info("Result is not in the cache lemme compute")
+        LOGGER.info("Result is not in the cache, let's compute...")
         return try {
+            LOGGER.info("try to conncect to the server here")
             service(res.execute().parse())
-        } catch (err: UnknownHostException) {
+        } catch (err: IOException) {
             throw JsoupNetworkError("Can't connect")
 
         }
@@ -63,7 +64,11 @@ class CacheService {
 
     @Cacheable(value = ["wc-caches"], condition = "#force!=true", sync = true, key = "#p0")
     fun computeEtagAndCountWord(url: String, force: Boolean, res: Connection.Response): Pair<Int, List<String>> {
-        return service(res.parse())
+        try {
+            return service(res.parse())
+        } catch (err: IOException) {
+            throw JsoupNetworkError("Network failed")
+        }
     }
 
 
