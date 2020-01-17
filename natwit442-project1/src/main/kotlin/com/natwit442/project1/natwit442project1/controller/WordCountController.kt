@@ -25,11 +25,14 @@ class WordCountController(val wordCountService: WordCountService) {
         return "result"
     }
 
+    data class Result(val totalWords: Int, val TopTen: List<String>)
+
     @RequestMapping("/wc")
     @ResponseBody
-    fun computeAdd(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue = "false") force: Boolean): String {
+    fun computeAdd(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue = "false") force: Boolean): Result {
         val (sumOfWords, topTen) = wordCountService.process(url, force) ?: Pair(0, listOf())
-        return """{'total_words': ${sumOfWords}, 'top_10' : ${topTen}}"""
+
+        return Result(sumOfWords, topTen)
     }
 }
 

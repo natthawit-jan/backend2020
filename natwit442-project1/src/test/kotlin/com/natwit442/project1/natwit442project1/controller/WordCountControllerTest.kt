@@ -64,7 +64,7 @@ internal class WordCountControllerTest {
     @Test
     fun shouldResultInJsonTypeWithRightKeysAndNonNullValue() {
         val jsonType = MediaType.APPLICATION_JSON
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET2, false, jsonType))?.andExpect(content().contentTypeCompatibleWith(jsonType))?.andExpect(status().isOk)?.andExpect(jsonPath("$" + ".total_words").isNotEmpty)?.andExpect(jsonPath("$.top_10").isArray)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET2, false, jsonType))?.andExpect(content().contentTypeCompatibleWith(jsonType))?.andExpect(status().isOk)?.andExpect(jsonPath("$" + ".totalWords").isNotEmpty)?.andExpect(jsonPath("$.topTen").isArray)
     }
 
 

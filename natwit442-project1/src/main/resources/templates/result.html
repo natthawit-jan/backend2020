@@ -5,7 +5,10 @@
     <title>Result</title>
 </head>
 <body>
-<h2 th:text="${total_words}"></h2>
-<h2 th:text="${top_ten}"></h2>
+<h2 th:text="${'Total word counts = ' + total_words}"></h2>
+<h2>10 words that appears often from the highest to lowest (there may be less than 10 words) </h2>
+<ul th:each="s: ${top_ten}">
+    <li th:text="${s}"/>
+</ul>
 </body>
 </html>
