@@ -4,14 +4,11 @@ package com.natwit442.project1.natwit442project1.controller
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cache.CacheManager
-import org.springframework.cache.annotation.EnableCaching
 import org.springframework.http.MediaType
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
@@ -28,12 +25,8 @@ internal class WordCountControllerTest {
     @Autowired
     private val cacheBean: CacheManager? = null
 
-    fun myFactoryRequest(url: String, target: String, force: Boolean = false, accept: MediaType = MediaType.TEXT_HTML):
-            MockHttpServletRequestBuilder {
-        return get(url)
-                .param("target", target)
-                .param("force", force.toString())
-                .accept(accept)
+    fun myFactoryRequest(url: String, target: String, force: Boolean = false, accept: MediaType = MediaType.TEXT_HTML): MockHttpServletRequestBuilder {
+        return get(url).param("target", target).param("force", force.toString()).accept(accept)
     }
 
     private val TARGET = "https://en.wikipedia.org/wiki/Computer_program"
@@ -62,55 +55,36 @@ internal class WordCountControllerTest {
     }
 
 
-
     @Test
     fun shouldGetSimpleHTML() {
-        for (work in 0..5) mockMvc?.perform(myFactoryRequest("/wc", TARGET, false))?.andExpect(status().isOk)?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.TEXT_HTML))
+        for (work in 0..5) mockMvc?.perform(myFactoryRequest("/wc", TARGET, false))?.andExpect(status().isOk)?.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
 
     }
 
     @Test
     fun shouldResultInJsonTypeWithRightKeysAndNonNullValue() {
         val jsonType = MediaType.APPLICATION_JSON
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET2, false, jsonType))?.andExpect(content().contentTypeCompatibleWith(jsonType))
-                ?.andExpect(status().isOk)?.andExpect(jsonPath("$" +
-                        ".total_words").isNotEmpty)?.andExpect(jsonPath("$.top_10").isArray)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET2, false, jsonType))?.andExpect(content().contentTypeCompatibleWith(jsonType))?.andExpect(status().isOk)?.andExpect(jsonPath("$" + ".total_words").isNotEmpty)?.andExpect(jsonPath("$.top_10").isArray)
     }
 
 
     @Test
     fun shouldGetBasicPlainText() {
         val plain = MediaType.TEXT_PLAIN
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET3, false, plain))?.andExpect(content().contentTypeCompatibleWith(plain))
-                ?.andExpect(status().isOk)
-                ?.andExpect(content().string(containsString("total words")))?.andExpect(content().string(containsString
-                ("top 10 " +
-                        "words")))
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET3, false, plain))?.andExpect(content().contentTypeCompatibleWith(plain))?.andExpect(status().isOk)?.andExpect(content().string(containsString("total words")))?.andExpect(content().string(containsString("top 10 " + "words")))
 
     }
 
     @Test
     fun shouldNoTBeConfusedAboutRequestAcceptTypeForTheSameSite() {
 
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.TEXT_HTML))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                ?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.APPLICATION_JSON))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                ?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET4, false, MediaType.TEXT_PLAIN))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
-                ?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.APPLICATION_JSON))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                ?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET4, false, MediaType.TEXT_PLAIN))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
-                ?.andExpect(status().isOk)
         mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.TEXT_HTML))?.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET4, false, MediaType.APPLICATION_JSON))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.APPLICATION_JSON))?.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET4, false, MediaType.TEXT_PLAIN))?.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.APPLICATION_JSON))?.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET4, false, MediaType.TEXT_PLAIN))?.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_PLAIN))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.TEXT_HTML))?.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET4, false, MediaType.APPLICATION_JSON))?.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))?.andExpect(status().isOk)
 
 
     }

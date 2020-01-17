@@ -13,11 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebMVCConfig : WebMvcConfigurer {
     override fun configureContentNegotiation(configurer: ContentNegotiationConfigurer) {
 
-        configurer
-                .favorParameter(false)
-                .ignoreAcceptHeader(false)
-                .defaultContentType(MediaType.TEXT_HTML)
-
+        configurer.favorParameter(false).ignoreAcceptHeader(false).defaultContentType(MediaType.TEXT_HTML)
 
 
     }

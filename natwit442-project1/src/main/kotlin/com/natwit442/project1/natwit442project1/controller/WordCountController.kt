@@ -18,9 +18,7 @@ class WordCountController(val wordCountService: WordCountService) {
     }
 
     @RequestMapping("/wc", produces = ["text/html"])
-    fun processHtml(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue =
-    "false")
-    force: Boolean, model: Model): String {
+    fun processHtml(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue = "false") force: Boolean, model: Model): String {
         val (sumOfWords, topTen) = wordCountService.process(url, force) ?: Pair(0, listOf())
         model.addAttribute("total_words", sumOfWords)
         model.addAttribute("top_ten", topTen)
@@ -29,8 +27,7 @@ class WordCountController(val wordCountService: WordCountService) {
 
     @RequestMapping("/wc")
     @ResponseBody
-    fun computeAdd(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue =
-    "false") force: Boolean): String {
+    fun computeAdd(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue = "false") force: Boolean): String {
         val (sumOfWords, topTen) = wordCountService.process(url, force) ?: Pair(0, listOf())
         return """{'total_words': ${sumOfWords}, 'top_10' : ${topTen}}"""
     }
