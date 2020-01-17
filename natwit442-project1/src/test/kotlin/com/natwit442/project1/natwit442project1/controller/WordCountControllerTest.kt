@@ -60,6 +60,7 @@ internal class WordCountControllerTest {
     }
 
 
+
     @Test
     fun shouldGetSimpleHTML() {
         for (work in 0..5) mockMvc?.perform(myFactoryRequest("/wc", TARGET, false))?.andExpect(status().isOk)?.andExpect(content()
@@ -105,14 +106,21 @@ internal class WordCountControllerTest {
         mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.TEXT_PLAIN))?.andExpect(content()
                 .contentTypeCompatibleWith(MediaType.TEXT_PLAIN))
                 ?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.TEXT_HTML))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.TEXT_HTML))
-                ?.andExpect(status().isOk)
-        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.APPLICATION_JSON))?.andExpect(content()
-                .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                ?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.TEXT_HTML))?.andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))?.andExpect(status().isOk)
+        mockMvc?.perform(myFactoryRequest("/wc", TARGET5, false, MediaType.APPLICATION_JSON))?.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))?.andExpect(status().isOk)
 
 
     }
+
+    @Test
+    fun malFormUrlShouldBeHandled() {
+        mockMvc?.perform(myFactoryRequest("/wc", "hfldsfds.com", false, MediaType.APPLICATION_JSON))?.andExpect(status().is4xxClientError)
+    }
+
+    @Test
+    fun shouldInformUserThatTargetParamIsMissing() {
+        mockMvc?.perform(get("/wc"))?.andExpect(status().is4xxClientError)
+    }
+
 
 }
