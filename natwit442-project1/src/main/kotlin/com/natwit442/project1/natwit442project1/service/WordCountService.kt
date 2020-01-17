@@ -1,7 +1,7 @@
 package com.natwit442.project1.natwit442project1.service
 
 
-import com.natwit442.project1.natwit442project1.error.JsoupNetworkError
+import com.natwit442.project1.natwit442project1.error.BadProtocolException
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.slf4j.LoggerFactory
@@ -22,7 +22,7 @@ class WordCountService(
     private val LOGGER = LoggerFactory.getLogger(WordCountService::class.java)
 
     fun makeConnection(url: String): Connection {
-        if (!url.startsWith("http", ignoreCase = true)) throw JsoupNetworkError("Badly formatted Url")
+        if (!url.startsWith("http", ignoreCase = true)) throw BadProtocolException("should start with http protocol")
         return Jsoup.connect(url)
     }
 
