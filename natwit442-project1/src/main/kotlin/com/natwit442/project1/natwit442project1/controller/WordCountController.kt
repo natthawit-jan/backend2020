@@ -6,7 +6,6 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.servlet.ModelAndView
 
 @Controller
 class WordCountController(val wordCountService: WordCountService) {
@@ -18,14 +17,22 @@ class WordCountController(val wordCountService: WordCountService) {
         return "total words : ${sumOfWords}, top 10 words : ${topTen}"
     }
 
-    @RequestMapping("/wc")
-    fun computeAdd(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue = "false") force: Boolean, model: Model): ModelAndView {
-
+    @RequestMapping("/wc", produces = ["text/html"])
+    fun processHtml(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue =
+    "false")
+    force: Boolean, model: Model): String {
         val (sumOfWords, topTen) = wordCountService.process(url, force) ?: Pair(0, listOf())
-        val obj = mutableMapOf<String, Any>()
-        obj["total_words"] = sumOfWords
-        obj["top_ten"] = topTen
-        return ModelAndView("result").addAllObjects(obj)
+        model.addAttribute("total_words", sumOfWords)
+        model.addAttribute("top_ten", topTen)
+        return "result"
+    }
+
+    @RequestMapping("/wc")
+    @ResponseBody
+    fun computeAdd(@RequestParam(value = "target") url: String, @RequestParam(value = "force", defaultValue =
+    "false") force: Boolean): String {
+        val (sumOfWords, topTen) = wordCountService.process(url, force) ?: Pair(0, listOf())
+        return """{'total_words': ${sumOfWords}, 'top_10' : ${topTen}}"""
     }
 }
 

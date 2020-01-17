@@ -19,5 +19,6 @@ class WebMVCConfig : WebMvcConfigurer {
                 .defaultContentType(MediaType.TEXT_HTML)
 
 
+
     }
 }
