@@ -20,19 +20,19 @@ class RestErrorHandler : ResponseEntityExceptionHandler() {
         val apiError = ApiError(HttpStatus.BAD_REQUEST, "Missing the parameter ${ex.parameterName} of type ${ex.parameterType}", ex)
         val accept = request.getHeader("accept")
         return when (accept) {
-            "text/plain" -> {
-                ResponseEntity("The parameter ${ex.parameterName} is missing", HttpStatus.BAD_REQUEST)
-            }
             "application/json" -> {
                 ResponseEntity(apiError, apiError.status!!)
 
             }
             else -> {
                 ResponseEntity("Missing parameter ${ex.parameterName}", HttpStatus.BAD_REQUEST)
-
             }
         }
+    }
 
+    @ExceptionHandler(BadProtocolException::class)
+    protected fun handleBadProtocol(exception: BadProtocolException, request: WebRequest): ResponseEntity<Any> {
+        return ResponseEntity(exception.message, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(JsoupNetworkError::class)
@@ -40,6 +40,4 @@ class RestErrorHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity("Network failed", HttpStatus.INTERNAL_SERVER_ERROR)
 
     }
-
-
 }
