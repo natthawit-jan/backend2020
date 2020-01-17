@@ -29,7 +29,7 @@ class Natwit442Project1Application {
 		return RestTemplate()
 	}
 
-	@Bean
+	@Bean(name = ["cacheBean"])
 	fun cacheManager(ticker: Ticker): CacheManager {
 		val messageCache: CaffeineCache = buildCache("wc-caches", ticker, 60)
 		val manager = SimpleCacheManager()

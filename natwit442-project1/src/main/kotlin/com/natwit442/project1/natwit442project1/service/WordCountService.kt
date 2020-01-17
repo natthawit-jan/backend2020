@@ -12,7 +12,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 @Service
-class WordCountService(val cacheService: CacheService, val concurrentHashMap: ConcurrentHashMap<String, String>, val concurrentHashMapVisitedTime: ConcurrentHashMap<String, Date>) {
+class WordCountService(
+        val cacheService: CacheService,
+        val concurrentHashMap: ConcurrentHashMap<String, String>,
+        val concurrentHashMapVisitedTime: ConcurrentHashMap<String, Date>
+) {
+
 
     private val LOGGER = LoggerFactory.getLogger(WordCountService::class.java)
 
